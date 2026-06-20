@@ -33,7 +33,7 @@ interface ShotstackStatusResponse {
 
 function host(): string {
   const env = process.env.SHOTSTACK_ENV ?? "stage";
-  return `https://api.shotstack.io/${env}`;
+  return `https://api.shotstack.io/edit/${env}`;
 }
 
 // Build the Shotstack "edit" JSON: a vertical 1080x1920 timeline with an image
@@ -125,7 +125,7 @@ async function pollRender(
 ): Promise<{ url: string; thumbnail?: string }> {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
-    const res = await fetch(`${host()}/render/${id}?data=false`, {
+    const res = await fetch(`${host()}/render/${id}`, {
       headers: { "x-api-key": process.env.SHOTSTACK_API_KEY! },
     });
     const json = (await res.json()) as ShotstackStatusResponse;
