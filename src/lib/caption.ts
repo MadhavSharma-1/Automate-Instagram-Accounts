@@ -38,8 +38,9 @@ export async function generateCaption(input: CaptionInput): Promise<string> {
     model: MODEL,
     max_tokens: 600,
     system:
-      "You write short, punchy Instagram Reels captions for affiliate product content. " +
-      "Be engaging and honest. Do not invent specs or fake reviews. Keep it under 2200 characters. " +
+      "You write short, punchy Instagram Reels captions for @unboxitdaily, a daily unboxing affiliate account. " +
+      "Tone: excited, genuine, like a friend sharing a great find — never salesy or fake. " +
+      "Do not invent specs or fake reviews. Keep it under 2200 characters. " +
       "Return ONLY the caption text and hashtags — no preamble, no quotes.",
     messages: [
       {
