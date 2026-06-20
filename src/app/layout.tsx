@@ -22,7 +22,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <div className="layout">
           <aside className="sidebar">
-            <h1 className="brand">📦 UnboxItDaily</h1>
+            <h1 className="brand">◈ UNBOXITDAILY</h1>
+            <div className="sysled">
+              <span className="dot" /> SYSTEM ONLINE
+            </div>
             <nav>
               {nav.map((n) => (
                 <Link key={n.href} href={n.href} className="navlink">
