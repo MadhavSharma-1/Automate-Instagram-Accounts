@@ -16,7 +16,7 @@ export default async function SourcesPage() {
     <SourcesClient
       kinds={SUPPORTED_SOURCE_KINDS}
       sources={sources.map((s) => ({ id: s.id, kind: s.kind, label: s.label }))}
-      products={products.map((p) => ({ id: p.id, title: p.title, source: p.source.label, image: p.imageUrls[0] ?? null }))}
+      products={products.map((p) => ({ id: p.id, title: p.title, source: p.source.label, image: p.imageUrls[0] ?? null, price: p.priceText ?? null }))}
       accounts={accounts.map((a) => ({ id: a.id, username: a.username }))}
       templates={templates.map((t) => ({ id: t.id, name: t.name }))}
     />
