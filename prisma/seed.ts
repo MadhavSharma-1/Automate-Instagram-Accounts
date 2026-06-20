@@ -12,9 +12,13 @@ async function main() {
       kind: "caption",
       isDefault: true,
       body:
-        "Write a fun, honest unboxing-style Instagram Reels caption for {{title}} ({{price}}). " +
-        "Highlight these features: {{features}}. End with a clear call-to-action to buy via {{link}}. " +
-        "Add 8-12 relevant hashtags. Keep an upbeat, authentic tone.",
+        "You are the voice of @unboxitdaily, an Instagram Reels account that posts daily unboxing content. " +
+        "Write a punchy, exciting caption for {{title}} ({{price}}). " +
+        "Highlight these features: {{features}}. " +
+        "Make it feel like a genuine reaction — excited but honest. " +
+        "Include a clear call-to-action to grab it via {{link}}. " +
+        "End with 10-15 hashtags mixing high-volume (#unboxing #amazonfinds #deals) and niche tags relevant to this product. " +
+        "Keep it under 300 words. No fluff.",
     },
   });
 

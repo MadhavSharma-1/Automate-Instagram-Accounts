@@ -4,8 +4,8 @@ import Link from "next/link";
 import { LogoutButton } from "./LogoutButton";
 
 export const metadata: Metadata = {
-  title: "Product Reels Automation",
-  description: "Admin panel for AI-generated affiliate product Reels.",
+  title: "UnboxItDaily — Admin",
+  description: "Admin panel for @unboxitdaily — AI-generated affiliate product Reels.",
 };
 
 const nav = [
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <div className="layout">
           <aside className="sidebar">
-            <h1 className="brand">🎬 Reels Auto</h1>
+            <h1 className="brand">📦 UnboxItDaily</h1>
             <nav>
               {nav.map((n) => (
                 <Link key={n.href} href={n.href} className="navlink">
