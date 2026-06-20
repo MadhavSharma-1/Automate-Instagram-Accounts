@@ -1,0 +1,11 @@
+[build]
+  command = "prisma generate && next build"
+
+# The official Next.js runtime for Netlify (App Router, middleware, API routes).
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Run the publisher every 10 minutes (replaces the standalone `npm run worker`,
+# which can't run on serverless). The function calls /api/cron/publish.
+[functions."publish-cron"]
+  schedule = "*/10 * * * *"

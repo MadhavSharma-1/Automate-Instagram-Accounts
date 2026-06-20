@@ -64,11 +64,32 @@ Product source adapter ─▶ Product ─▶ generatePostForProduct()
    ```bash
    npm run dev               # admin panel at http://localhost:3000
    ```
-4. **Run the publisher** (in another terminal, or use Vercel Cron via
-   `vercel.json` → `/api/cron/publish`)
+4. **Run the publisher** (local dev only — in another terminal)
    ```bash
    npm run worker
    ```
+   In production on Netlify this is handled automatically by a Scheduled
+   Function (see Deployment below) — you don't run the worker there.
+
+## Deploy to Netlify
+
+1. Push this repo to GitHub, then in Netlify: **Add new site → Import from Git**
+   and pick the repo. The build settings come from `netlify.toml` automatically.
+2. In **Site configuration → Environment variables**, add the same keys from
+   your `.env` (at minimum `DATABASE_URL`, `ANTHROPIC_API_KEY`, `ADMIN_PASSWORD`,
+   and your Instagram/Shotstack keys). Use a strong `ADMIN_PASSWORD` — it's the
+   login for the whole panel.
+3. Deploy. The site is **password-protected** by `ADMIN_PASSWORD`: every page
+   and API route is gated by Next.js middleware (`src/middleware.ts`); visitors
+   get a login screen at `/login`.
+4. Publishing runs automatically: the **Scheduled Function**
+   `netlify/functions/publish-cron.mjs` fires every 10 minutes (configured in
+   `netlify.toml`) and calls `/api/cron/publish`, which respects each account's
+   daily limit. No always-on worker needed.
+
+> Auth note: the panel uses a single shared password (httpOnly session cookie,
+> SHA-256 token). Good enough for a private admin tool; add per-user accounts if
+> you need multiple operators.
 
 ## Getting the credentials
 

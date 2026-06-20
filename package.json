@@ -23,6 +23,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.15.12",
     "@types/node": "^22.7.5",
     "@types/react": "^18.3.11",
     "prisma": "^5.22.0",
