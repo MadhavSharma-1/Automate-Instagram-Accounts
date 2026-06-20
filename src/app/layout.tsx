@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LogoutButton } from "./LogoutButton";
 
 export const metadata: Metadata = {
   title: "Product Reels Automation",
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               Posts publish via the official Instagram Graph API. Affiliate &amp; AI-content
               disclosures are added automatically.
             </p>
+            <LogoutButton />
           </aside>
           <main className="content">{children}</main>
         </div>
