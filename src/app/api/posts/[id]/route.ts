@@ -9,6 +9,11 @@ const schema = z.object({
   scheduledFor: z.string().datetime().nullish(),
 });
 
+export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
+  await prisma.post.delete({ where: { id: params.id } });
+  return NextResponse.json({ ok: true });
+}
+
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const parsed = schema.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
