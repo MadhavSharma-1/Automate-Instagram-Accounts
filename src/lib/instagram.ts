@@ -1,16 +1,23 @@
 // Instagram publishing via the OFFICIAL Graph API (Content Publishing).
 //
 // This is the sanctioned path (vs. automating the private app), which keeps your
-// accounts in good standing. Requirements:
-//   - Instagram Business or Creator account, linked to a Facebook Page
-//   - A Meta app with the Instagram Graph API + a long-lived access token
-//   - Reels are published from a PUBLIC video URL in two steps:
+// accounts in good standing. Two supported setups:
+//
+//   A) Instagram API with Instagram Login (recommended — no Facebook Page needed):
+//        base = https://graph.instagram.com/v21.0
+//        Get a token from your Meta app → Instagram → "API setup with Instagram
+//        login" → "Generate access tokens" → Add account.
+//
+//   B) Instagram API with Facebook Login (account must be linked to a FB Page):
+//        base = https://graph.facebook.com/v21.0
+//
+// Set IG_API_BASE to switch. Reels are published from a PUBLIC video URL in two steps:
 //       1) create a media container (POST /{ig-user-id}/media)
 //       2) publish it          (POST /{ig-user-id}/media_publish)
 //
-// Docs: https://developers.facebook.com/docs/instagram-api/guides/content-publishing
+// Docs: https://developers.facebook.com/docs/instagram-platform/content-publishing
 
-const GRAPH = "https://graph.facebook.com/v21.0";
+const GRAPH = process.env.IG_API_BASE ?? "https://graph.instagram.com/v21.0";
 
 export interface PublishReelParams {
   igUserId: string;
