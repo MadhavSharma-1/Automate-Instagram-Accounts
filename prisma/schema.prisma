@@ -1,0 +1,108 @@
+// Prisma schema for the Instagram product-content automation panel.
+// Run: npx prisma migrate dev
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// A connected Instagram Business/Creator account (published via the official Graph API).
+model InstagramAccount {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  igUserId     String   @unique // Instagram Graph API user id
+  accessToken  String // long-lived token (encrypt at rest in production)
+  tokenExpires DateTime?
+  // How many posts/day the scheduler may publish for this account.
+  dailyLimit   Int      @default(3)
+  active       Boolean  @default(true)
+  posts        Post[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// A configured product source (one row per affiliate integration).
+model ProductSource {
+  id        String   @id @default(cuid())
+  // "amazon" | "aliexpress" | "temu" | "manual"
+  kind      String
+  label     String
+  enabled   Boolean  @default(true)
+  // Source-specific query config (categories, keywords, min rating, etc.)
+  config    Json     @default("{}")
+  products  Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// A normalized product pulled from a source.
+model Product {
+  id          String   @id @default(cuid())
+  source      ProductSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  sourceId    String
+  externalId  String // ASIN / item id / etc.
+  title       String
+  description String?
+  priceText   String?
+  imageUrls   String[]
+  // The affiliate/tracking buy link that goes in the caption.
+  affiliateUrl String
+  raw         Json     @default("{}")
+  posts       Post[]
+  createdAt   DateTime @default(now())
+
+  @@unique([sourceId, externalId])
+}
+
+// An editable prompt template for caption (and video script) generation.
+model PromptTemplate {
+  id        String   @id @default(cuid())
+  name      String
+  kind      String   @default("caption") // "caption" | "script"
+  // The prompt body. Supports {{title}}, {{price}}, {{features}}, {{link}} placeholders.
+  body      String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// The unit of work: one planned/generated/published post.
+enum PostStatus {
+  DRAFT // created, nothing generated yet
+  GENERATING // video/caption in progress
+  PENDING_APPROVAL // generated, waiting for human approval
+  APPROVED // approved, queued to publish
+  PUBLISHING // handed to Graph API
+  PUBLISHED // live on Instagram
+  FAILED
+  REJECTED
+}
+
+model Post {
+  id           String   @id @default(cuid())
+  account      InstagramAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId    String
+  product      Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productId    String?
+  status       PostStatus @default(DRAFT)
+  // Generated assets.
+  caption      String?
+  videoUrl     String? // public URL of rendered video (required by Graph API)
+  thumbnailUrl String?
+  // Graph API container / media ids once published.
+  igContainerId String?
+  igMediaId     String?
+  // When the scheduler should publish (your "3/day" slots resolve to times).
+  scheduledFor DateTime?
+  publishedAt  DateTime?
+  error        String?
+  isHighlight  Boolean  @default(false) // add to a Highlight after publishing (Story flow)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([status, scheduledFor])
+}
