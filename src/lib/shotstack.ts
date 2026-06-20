@@ -107,14 +107,17 @@ function buildEdit(job: VideoJob) {
 }
 
 async function submitRender(edit: unknown): Promise<string> {
-  const res = await fetch(`${host()}/render`, {
+  const url = `${host()}/render`;
+  const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-api-key": process.env.SHOTSTACK_API_KEY! },
     body: JSON.stringify(edit),
   });
-  const json = (await res.json()) as ShotstackRenderResponse & { message?: string };
+  const raw = await res.text();
+  let json: ShotstackRenderResponse & { message?: string };
+  try { json = JSON.parse(raw); } catch { throw new Error(`Shotstack submit failed [${res.status}] at ${url}: ${raw.slice(0, 300)}`); }
   if (!res.ok || !json.success) {
-    throw new Error(`Shotstack submit failed: ${json.message ?? res.statusText}`);
+    throw new Error(`Shotstack submit failed [${res.status}] at ${url}: ${json.message ?? raw.slice(0, 300)}`);
   }
   return json.response.id;
 }
