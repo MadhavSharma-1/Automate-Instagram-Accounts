@@ -49,12 +49,10 @@ async function renderStub(job: VideoJob): Promise<VideoResult> {
   };
 }
 
-async function renderShotstack(_job: VideoJob): Promise<VideoResult> {
-  if (!process.env.SHOTSTACK_API_KEY) throw new Error("SHOTSTACK_API_KEY not set");
-  // INTEGRATION POINT: POST a Shotstack edit JSON (image clips + Ken Burns +
-  // title/captions + optional TTS voiceover track), poll the render, then
-  // return the hosted URL. See https://shotstack.io/docs/
-  throw new Error("Shotstack provider not wired yet. Implement renderShotstack().");
+async function renderShotstack(job: VideoJob): Promise<VideoResult> {
+  // Implemented in ./shotstack — builds the edit, submits, polls, returns URL.
+  const { renderWithShotstack } = await import("./shotstack");
+  return renderWithShotstack(job);
 }
 
 async function renderReplicate(_job: VideoJob): Promise<VideoResult> {
